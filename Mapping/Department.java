@@ -1,4 +1,4 @@
-package entity;
+package com.example.entity;
 
 import jakarta.persistence.*;
 import java.util.ArrayList;
@@ -9,47 +9,41 @@ public class Department {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
-    private String name;
+    private String deptName;
 
     @OneToMany(mappedBy = "department",
             cascade = CascadeType.ALL)
-    private List<Student> students = new ArrayList<>();
+    private List<Employee> employees = new ArrayList<>();
 
-    public Department() {
+    public void addEmployee(Employee employee){
+        employees.add(employee);
+        employee.setDepartment(this);
     }
 
-    public Department(String name) {
-        this.name = name;
+    public void removeEmployee(Employee employee){
+        employees.remove(employee);
+        employee.setDepartment(null);
     }
 
-    public void addStudent(Student student){
-        students.add(student);
-        student.setDepartment(this);
-    }
-
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id=id;
+    public String getDeptName() {
+        return deptName;
     }
 
-    public String getName() {
-        return name;
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
     }
 
-    public void setName(String name){
-        this.name=name;
+    public List<Employee> getEmployees() {
+        return employees;
     }
 
-    public List<Student> getStudents() {
-        return students;
-    }
-
-    public void setStudents(List<Student> students){
-        this.students=students;
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
     }
 }
