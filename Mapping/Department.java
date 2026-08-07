@@ -1,34 +1,27 @@
-package com.example.entity;
+package mapping;
 
-import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.*;
 
 @Entity
 public class Department {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     private String deptName;
 
-    @OneToMany(mappedBy = "department",
-            cascade = CascadeType.ALL)
-    private List<Employee> employees = new ArrayList<>();
+    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
+    private List<Student> students = new ArrayList<>();
 
-    public void addEmployee(Employee employee){
-        employees.add(employee);
-        employee.setDepartment(this);
-    }
-
-    public void removeEmployee(Employee employee){
-        employees.remove(employee);
-        employee.setDepartment(null);
-    }
-
-    public Long getId() {
+    public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getDeptName() {
@@ -39,11 +32,11 @@ public class Department {
         this.deptName = deptName;
     }
 
-    public List<Employee> getEmployees() {
-        return employees;
+    public List<Student> getStudents() {
+        return students;
     }
 
-    public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
+    public void setStudents(List<Student> students) {
+        this.students = students;
     }
 }
