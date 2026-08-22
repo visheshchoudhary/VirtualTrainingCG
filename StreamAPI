@@ -1,0 +1,90 @@
+
+import java.util.stream.IntStream;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+//----------------------------------Sum of squares of 1 million numbers using Parallel Stream
+public class SumOfSquares {
+    public static void main(String[] args) {
+
+        long sum = IntStream.rangeClosed(1, 1_000_000)
+                .parallel()
+                .mapToLong(n -> (long) n * n)
+                .sum();
+
+        System.out.println("Sum of Squares = " + sum);
+    }
+}
+
+// ---------------------------------Calculate average of large dataset using Parallel Stream and compare performance
+
+public class AverageComparison {
+  public static void main(String[] args) {
+        List<Integer> numbers = IntStream.rangeClosed(1, 10_000_000).boxed().collect(Collectors.toList());
+        // Sequential Stream
+        long start = System.currentTimeMillis();
+        double avg1 = numbers.stream().mapToInt(Integer::intValue).average().orElse(0);
+        long end = System.currentTimeMillis();
+        System.out.println("Sequential Average = " + avg1);
+        System.out.println("Sequential Time = " + (end - start) + " ms");
+        // Parallel Stream
+        start = System.currentTimeMillis();
+       double avg2 = numbers.parallelStream().mapToInt(Integer::intValue).average().orElse(0);
+        end = System.currentTimeMillis();
+        System.out.println("Parallel Average = " + avg2);
+        System.out.println("Parallel Time = " + (end - start) + " ms");
+    }
+}
+
+//--------------------------------------------Filter and sort large dataset using Parallel Stream
+public static void main(String[] args) {
+        List<Integer> numbers = IntStream.rangeClosed(1, 1_000_000).boxed().collect(Collectors.toList());
+        List<Integer> result = numbers.parallelStream().filter(n -> n % 2 == 0).sorted().collect(Collectors.toList());
+        System.out.println("Total Even Numbers = " + result.size());
+        System.out.println("First 10 = " + result.subList(0, 10));
+    }
+
+
+//-------------------------------------Find max in huge list using Parallel Stream
+
+public static void main(String[] args) {
+        List<Integer> numbers = IntStream.rangeClosed(1, 5_000_000).boxed().collect(Collectors.toList());
+        Optional<Integer> max = numbers.parallelStream().max(Integer::compareTo);
+        System.out.println("Maximum = " + max.orElse(0));
+    }
+
+
+//--------------------------------------- Group large dataset using Parallel Stream and merge results
+
+public class Employee {
+    private String department;
+    private String name;
+    private double salary;
+    public Employee(String department, String name, double salary) {
+        this.department = department;
+        this.name = name;
+        this.salary = salary;
+    }
+    public String getDepartment() {
+        return department;
+    }
+    public String getName() {
+        return name;
+    }
+    public double getSalary() {
+        return salary;
+    }
+    @Override
+    public String toString() {
+        return name + " : " + salary;
+    }
+}
+public class GroupParallel {
+    public static void main(String[] args) {
+        List<Employee> employees = Arrays.asList(new Employee("IT", "John", 70000),new Employee("IT", "Alex", 80000),new Employee("HR", "Sara", 60000),
+                new Employee("HR", "David", 55000),new Employee("Sales", "Tom", 50000),new Employee("Sales", "Mike", 52000));
+        Map<String, List<Employee>> grouped =employees.parallelStream().collect(Collectors.groupingByConcurrent(Employee::getDepartment));
+        grouped.forEach((dept, empList) -> {System.out.println(dept + " -> " + empList);});
+    }
+}
